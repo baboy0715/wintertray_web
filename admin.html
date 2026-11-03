@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WinterTray — Adminisztrációs Központ &amp; Verziókezelő</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='2' x2='12' y2='22'%3E%3C/line%3E%3Cline x1='2' y1='12' x2='22' y2='12'%3E%3C/line%3E%3Cline x1='4.93' y1='4.93' x2='19.07' y2='19.07'%3E%3C/line%3E%3Cline x1='19.07' y1='4.93' x2='4.93' y2='19.07'%3E%3C/line%3E%3C/svg%3E">
+
+  <!-- Betűtípusok -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- =========================================================================
+       BELÉPÉSI KÉPERNYŐ (PIN / JELSZÓ GATE)
+       ========================================================================= -->
+  <div id="login-overlay" class="login-overlay">
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="logo-icon-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+            <line x1="19.07" y1="4.93" x2="4.93" y2="19.07"></line>
+          </svg>
+        </div>
+        <h2>WinterTray Admin</h2>
+        <p>Kérlek add meg az adminisztrátori PIN kódot a verziókezelő eléréséhez.</p>
+      </div>
+
+      <form id="login-form" class="login-form">
+        <div class="form-group">
+          <label for="admin-pin">Adminisztrátori PIN kód</label>
+          <input type="password" id="admin-pin" class="form-control" placeholder="••••••••" autofocus autocomplete="current-password">
+          <span class="form-hint">Alapértelmezett PIN kód: <code>winter2026</code></span>
+        </div>
+
+        <div class="form-check">
+          <input type="checkbox" id="remember-me" checked>
+          <label for="remember-me">Emlékezz rám ezen az eszközön</label>
+        </div>
+
+        <div id="login-error" class="login-error" style="display: none;">
+          ⚠️ Helytelen PIN kód! Próbáld újra.
+        </div>
+
+        <button type="submit" class="btn-primary-admin w-100">
+          <span>Belépés a Vezérlőpultra</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+
+        <a href="index.html" class="back-link">← Vissza a publikus főoldalra</a>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       FŐ ADMINISZTRÁCIÓS FELÜLET
+       ========================================================================= -->
+  <div id="admin-app" class="admin-app" style="display: none;">
+
+    <!-- Admin Fejléc -->
+    <header class="admin-header">
+      <div class="container admin-nav-container">
+        <div class="admin-brand">
+          <div class="logo-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+              <line x1="19.07" y1="4.93" x2="4.93" y2="19.07"></line>
+            </svg>
+          </div>
+          <div>
+            <div class="admin-title">WinterTray <span class="badge-admin">Adminisztráció</span></div>
+            <div class="admin-subtitle">Kiadás- és letöltéskezelő központ</div>
+          </div>
+        </div>
+
+        <div class="admin-header-actions">
+          <a href="index.html" target="_blank" class="btn-secondary-admin" title="Főoldal megtekintése új lapon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            <span>Weboldal ↗</span>
+          </a>
+          <a href="https://github.com/baboy0715/wintertray_web" target="_blank" class="btn-secondary-admin" title="GitHub Tároló">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>GitHub</span>
+          </a>
+          <button id="btn-logout" class="btn-danger-outline" title="Kijelentkezés">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            <span>Kijelentkezés</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Fő tartalom -->
+    <main class="container admin-main">
+
+      <!-- Felső értesítési sáv (404 megelőzés tájékoztató) -->
+      <div class="alert-banner">
+        <div class="alert-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        </div>
+        <div class="alert-content">
+          <strong>404 Letöltési hiba elkerülése:</strong>
+          A letöltési linkek mostantól alapértelmezetten a helyi <code>./downloads/WinterTray-Setup.exe</code> és <code>./downloads/WinterTray-Portable.zip</code> fájlokra mutatnak, amelyeket a Cloudflare Pages közvetlenül és villámgyorsan kiszolgál. Új kiadás esetén a fájlokat feltöltheted közvetlenül ide vagy GitHub Releases-re!
+        </div>
+      </div>
+
+      <!-- Fülek Navigációja -->
+      <div class="admin-tabs">
+        <button class="tab-btn active" data-tab="tab-releases">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span>Kiadások Listája (<span id="release-count">0</span>)</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-editor" id="btn-tab-editor">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span id="editor-tab-label">Új Verzió Hozzáadása</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-publish">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="M12 12v9"></path><path d="m16 16-4-4-4 4"></path></svg>
+          <span>Publikálás &amp; Szinkronizáció</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Beállítások</span>
+        </button>
+      </div>
+
+      <!-- =========================================================================
+           TAB 1: KIADÁSOK LISTÁJA
+           ========================================================================= -->
+      <section id="tab-releases" class="tab-pane active">
+        <div class="pane-header">
+          <div>
+            <h3>Jelenleg elérhető kiadások</h3>
+            <p>Ezek a verziók jelennek meg a weboldal letöltési gombjainál és a Changelogban.</p>
+          </div>
+          <button id="btn-create-new-release" class="btn-primary-admin">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>+ Új verzió feltöltése</span>
+          </button>
+        </div>
+
+        <div class="releases-table-wrapper">
+          <table class="releases-table">
+            <thead>
+              <tr>
+                <th>Verzió</th>
+                <th>Kiadás Dátuma</th>
+                <th>Státusz</th>
+                <th>Telepítő (.exe)</th>
+                <th>Hordozható (.zip)</th>
+                <th>Fájlméret</th>
+                <th>Műveletek</th>
+              </tr>
+            </thead>
+            <tbody id="releases-table-body">
+              <!-- Dinamikusan feltöltve JavaScripttel -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 2: ÚJ VERZIÓ HOZZÁADÁSA / SZERKESZTŐ
+           ========================================================================= -->
+      <section id="tab-editor" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h3 id="editor-title">Új Verzió Létrehozása &amp; Fájl Hozzárendelés</h3>
+            <p>Add meg a verziószámot, húzd be a telepítőfájlt a méret és SHA-256 automatikus számításához.</p>
+          </div>
+          <div class="editor-header-actions">
+            <button id="btn-cancel-edit" class="btn-secondary-admin" style="display: none;">Mégse</button>
+            <button id="btn-save-release" class="btn-primary-admin">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Kiadás Mentése</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="editor-grid">
+          <!-- Bal oldali űrlap -->
+          <div class="editor-form-col">
+            <form id="release-form">
+              <input type="hidden" id="edit-release-index" value="-1">
+
+              <!-- Alapadatok -->
+              <div class="form-section-card">
+                <h4>1. Alapvető Verzióinformációk</h4>
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="form-version">Verziószám *</label>
+                    <input type="text" id="form-version" class="form-control mono" placeholder="v1.1.0" required>
+                    <span class="form-hint">Pl. v1.0.1, v1.1.0, v2.0.0</span>
+                  </div>
+                  <div class="form-group">
+                    <label for="form-date">Kiadás Dátuma *</label>
+                    <input type="date" id="form-date" class="form-control" required>
+                  </div>
+                </div>
+
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="form-badge">Címke / Státusz</label>
+                    <select id="form-badge" class="form-control">
+                      <option value="Legfrissebb Stabil Kiadás">Legfrissebb Stabil Kiadás</option>
+                      <option value="Béta Előzetes">Béta Előzetes</option>
+                      <option value="Kiemelt Kiadás">Kiemelt Kiadás</option>
+                      <option value="Javító Kiadás">Javító Kiadás</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="display: flex; align-items: flex-end; padding-bottom: 8px;">
+                    <label class="checkbox-container">
+                      <input type="checkbox" id="form-is-latest" checked>
+                      <span class="checkbox-label">Ez legyen a weboldal FŐ letöltési verziója (isLatest)</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fájlok és SHA-256 generátor Drag & Drop -->
+              <div class="form-section-card">
+                <h4>2. Telepítő Fájl &amp; Automata Hash Számítás</h4>
+                
+                <!-- Drag and drop doboz -->
+                <div id="drop-zone" class="drop-zone">
+                  <div class="drop-zone-icon">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  </div>
+                  <div class="drop-zone-text">
+                    <strong>Húzd ide a WinterTray-Setup.exe fájlt a gépedről</strong>
+                    <span>vagy kattints a kiválasztáshoz</span>
+                  </div>
+                  <input type="file" id="file-input-exe" accept=".exe,.zip,.msi" style="display: none;">
+                </div>
+
+                <div class="form-row-2" style="margin-top: 16px;">
+                  <div class="form-group">
+                    <label for="form-filesize">Telepítő Fájlméret *</label>
+                    <input type="text" id="form-filesize" class="form-control" placeholder="18.4 MB" required>
+                    <span class="form-hint">A fájl behúzásakor automatikusan kitöltődik.</span>
+                  </div>
+                  <div class="form-group">
+                    <label for="form-portablesize">Hordozható Méret</label>
+                    <input type="text" id="form-portablesize" class="form-control" placeholder="14.2 MB">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="form-sha256">SHA-256 Ellenőrzőösszeg (Hash)</label>
+                  <input type="text" id="form-sha256" class="form-control mono" placeholder="A fájl behúzásakor a böngésző automatikusan kiszámolja...">
+                </div>
+
+                <!-- Letöltési URL-ek -->
+                <div class="form-group">
+                  <label>Telepítő Letöltési Forrása</label>
+                  <div class="radio-options">
+                    <label class="radio-label">
+                      <input type="radio" name="url-source" value="cloudflare" checked>
+                      <span>Cloudflare Pages Tárhely (<code>./downloads/WinterTray-Setup.exe</code>) — <em>Biztosan nincs 404!</em></span>
+                    </label>
+                    <label class="radio-label">
+                      <input type="radio" name="url-source" value="github">
+                      <span>GitHub Releases (<code>https://github.com/baboy0715/wintertray_web/releases/download/...</code>)</span>
+                    </label>
+                    <label class="radio-label">
+                      <input type="radio" name="url-source" value="custom">
+                      <span>Egyéni külső URL megadása</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group" id="custom-url-group">
+                  <label for="form-download-url">Telepítő Letöltési Link (URL) *</label>
+                  <input type="text" id="form-download-url" class="form-control mono" value="./downloads/WinterTray-Setup.exe" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="form-portable-url">Hordozható Verzió Link (.zip)</label>
+                  <input type="text" id="form-portable-url" class="form-control mono" value="./downloads/WinterTray-Portable.zip">
+                </div>
+              </div>
+
+              <!-- Főbb Újdonságok (Highlights) -->
+              <div class="form-section-card">
+                <div class="card-title-row">
+                  <h4>3. Főbb Újdonságok (Kiemelt pontok a kártyán)</h4>
+                  <button type="button" id="btn-add-highlight" class="btn-sm-admin">+ Pont hozzáadása</button>
+                </div>
+                <div id="highlights-container" class="dynamic-inputs-list">
+                  <!-- Dinamikusan feltöltve -->
+                </div>
+              </div>
+
+              <!-- Részletes Changelog kategóriák -->
+              <div class="form-section-card">
+                <div class="card-title-row">
+                  <h4>4. Részletes Frissítési Napló (Changelog Kategóriák)</h4>
+                  <button type="button" id="btn-add-category" class="btn-sm-admin">+ Kategória hozzáadása</button>
+                </div>
+                <div id="changelog-categories-container" class="changelog-categories-list">
+                  <!-- Dinamikusan feltöltve -->
+                </div>
+              </div>
+
+            </form>
+          </div>
+
+          <!-- Jobb oldali élő előnézet -->
+          <div class="editor-preview-col">
+            <div class="sticky-preview">
+              <div class="preview-header">
+                <h4>Élő Előnézet a Weboldalon</h4>
+                <span class="preview-tag">Valós idejű</span>
+              </div>
+              <div id="live-card-preview" class="timeline-card">
+                <!-- Valós idejű előnézet -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 3: PUBLIKÁLÁS & SZINKRONIZÁCIÓ
+           ========================================================================= -->
+      <section id="tab-publish" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h3>Publikálás &amp; Cloudflare Szinkronizáció</h3>
+            <p>Válassz az alábbi módszerek közül a frissített kiadások élesítéséhez.</p>
+          </div>
+        </div>
+
+        <div class="publish-cards-grid">
+          <!-- 1. Automata GitHub API Commit -->
+          <div class="publish-card featured">
+            <div class="publish-badge">Ajánlott • 1 Kattintás</div>
+            <div class="publish-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </div>
+            <h4>Automatikus Publikálás a GitHubra &amp; Cloudflare-re</h4>
+            <p>
+              Add meg a GitHub Personal Access Token-edet (egyszer kell beírni, a böngésződben megjegyzi). Egy kattintással lementi a <code>releases.json</code> és <code>releases.js</code> fájlokat a tárolóba, és a Cloudflare Pages azonnal újraépíti az oldalt!
+            </p>
+
+            <div class="form-group" style="margin-top: 18px; text-align: left;">
+              <label for="gh-token">GitHub Token (Fine-grained vagy Classic PAT <code>repo</code> joggal):</label>
+              <input type="password" id="gh-token" class="form-control mono" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+              <span class="form-hint">
+                Nincs még tokened? <a href="https://github.com/settings/tokens/new?scopes=repo&description=WinterTray+Web+Admin" target="_blank" style="color: var(--ice-light); text-decoration: underline;">Kattints ide egy 1 perces létrehozásához ↗</a>
+              </span>
+            </div>
+
+            <button id="btn-publish-github" class="btn-primary-admin w-100" style="margin-top: 14px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="M12 12v9"></path><path d="m16 16-4-4-4 4"></path></svg>
+              <span>🚀 Publikálás a GitHub Repóba Most</span>
+            </button>
+            <div id="publish-status" class="publish-status" style="display: none;"></div>
+          </div>
+
+          <!-- 2. Helyi Letöltés & Git Push -->
+          <div class="publish-card">
+            <div class="publish-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </div>
+            <h4>Fájlok Letöltése (Token nélkül)</h4>
+            <p>
+              Töltsd le a generált fájlokat és másold be őket a <code>c:\projektekű\wintertray web</code> mappádba, majd add ki a <code>git commit &amp;&amp; git push</code> parancsot a terminálban.
+            </p>
+
+            <div class="btn-stack" style="margin-top: 20px;">
+              <button id="btn-download-releases-js" class="btn-secondary-admin w-100">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>💾 releases.js letöltése</span>
+              </button>
+              <button id="btn-download-releases-json" class="btn-secondary-admin w-100">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>💾 releases.json letöltése</span>
+              </button>
+              <button id="btn-copy-json" class="btn-secondary-admin w-100">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>📋 JSON Vágólapra másolása</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. Helyi Élő Tesztelés -->
+          <div class="publish-card">
+            <div class="publish-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+            </div>
+            <h4>Helyi Böngésző Előnézet</h4>
+            <p>
+              A módosítások azonnal elmentődnek a saját böngésződbe (<code>localStorage</code>), így a főoldalon azonnal látod az eredményt mielőtt bárhova közzétennéd!
+            </p>
+
+            <div class="btn-stack" style="margin-top: 24px;">
+              <button id="btn-reset-local" class="btn-danger-outline w-100">
+                <span>🔄 Helyi tesztadatok törlése (Alapállapot)</span>
+              </button>
+              <a href="index.html" target="_blank" class="btn-primary-admin w-100" style="text-align: center;">
+                <span>Főoldal ellenőrzése ↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 4: BEÁLLÍTÁSOK
+           ========================================================================= -->
+      <section id="tab-settings" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h3>Adminisztrátori Beállítások</h3>
+            <p>Módosítsd a belépési PIN kódot vagy töröld az elmentett hitelesítő adatokat.</p>
+          </div>
+        </div>
+
+        <div class="settings-box">
+          <div class="form-section-card">
+            <h4>Admin PIN Kód Módosítása</h4>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="new-pin">Új PIN kód</label>
+                <input type="password" id="new-pin" class="form-control" placeholder="••••••••">
+              </div>
+              <div class="form-group" style="display: flex; align-items: flex-end;">
+                <button id="btn-save-pin" class="btn-primary-admin">
+                  <span>Új PIN mentése</span>
+                </button>
+              </div>
+            </div>
+            <span class="form-hint">A megváltoztatott PIN a böngésződben tárolódik.</span>
+          </div>
+
+          <div class="form-section-card" style="margin-top: 24px;">
+            <h4>GitHub Tároló Kapcsolat</h4>
+            <div class="form-group">
+              <label>Tároló elérési útja:</label>
+              <input type="text" class="form-control mono" value="baboy0715/wintertray_web" readonly disabled>
+            </div>
+            <div class="form-group">
+              <label>Célág (Branch):</label>
+              <input type="text" class="form-control mono" value="main" readonly disabled>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Szkriptek -->
+  <script src="releases.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

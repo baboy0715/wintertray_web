@@ -26,13 +26,40 @@ document.addEventListener('DOMContentLoaded', async () => {
   initFaqAccordion();
   initMockupInteractivity(snowEngine);
   initPlaygroundControls(snowEngine);
+  initAdminShortcut();
 });
 
 /**
- * Kiadások betöltése (Elsődlegesen window.WINTERTRAY_RELEASES, másodlagosan fetch('releases.json'))
+ * Gyorsbillentyű az Admin felület megnyitásához (Ctrl + Shift + A)
+ */
+function initAdminShortcut() {
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+      e.preventDefault();
+      window.location.href = 'admin.html';
+    }
+  });
+}
+
+/**
+ * Kiadások betöltése (Elsődlegesen localStorage override, másodlagosan window.WINTERTRAY_RELEASES, harmadlagosan fetch('releases.json'))
  */
 async function initReleases() {
-  let releases = window.WINTERTRAY_RELEASES;
+  let releases = null;
+
+  // Helyi szerkesztett verziók ellenőrzése az admin felületből
+  try {
+    const savedCustom = localStorage.getItem('wintertray_custom_releases');
+    if (savedCustom) {
+      releases = JSON.parse(savedCustom);
+    }
+  } catch (e) {
+    console.warn('Nem sikerült a localStorage-ből betölteni az egyedi kiadásokat:', e);
+  }
+
+  if (!releases) {
+    releases = window.WINTERTRAY_RELEASES;
+  }
 
   if (!releases || !Array.isArray(releases)) {
     try {

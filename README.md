@@ -26,6 +26,20 @@ A weboldal 100%-ban statikus, zéró külső szerverfüggőséggel bíró, vill�
 
 ---
 
+## 🛠️ Vizuális Admin Felület (Admin Dashboard)
+
+Az oldal rendelkezik egy beépített, modern **Adminisztrációs Vezérlőpulttal** (`admin.html`), ahol kódolás nélkül, grafikus felületen tölthetsz fel új verziókat:
+
+- **Elérés:** Nyisd meg az `admin.html`-t vagy nyomd le a főoldalon a **`Ctrl + Shift + A`** billentyűkombinációt.
+- **Alapértelmezett PIN kód:** `winter2026` (a Beállítások fülön bármikor módosítható).
+- **Fő funkciók az Adminban:**
+  - 📂 **Drag & Drop Fájlfeltöltő:** Egyszerűen húzd be a gépedről a `WinterTray-Setup.exe` fájlt; a böngésző a Web Crypto API segítségével **másodpercek alatt kiszámolja a pontos fájlméretet és az ellenőrzött SHA-256 hash-t**!
+  - 🛡️ **Zéró 404 letöltési hiba:** A telepítők közvetlenül a `./downloads/` mappából szolgálódnak ki a Cloudflare Pages globális CDN hálózatán keresztül.
+  - 🚀 **1 Kattintásos GitHub Publikálás:** Ha megadod a GitHub Token-edet, egyetlen gombnyomásra commitolja az új kiadást a repóba, és a Cloudflare Pages azonnal frissíti a weboldalt az egész világon!
+  - 💾 **Export / Helyi letöltés:** Letöltheted a frissített `releases.js` és `releases.json` fájlokat manuális commit-hoz is.
+
+---
+
 ## 🚀 Hogyan adj hozzá új verziót (Release frissítés 1 perc alatt)
 
 Nyisd meg a `releases.js` (és tetszés szerint a `releases.json`) fájlt, és másold be a legfelső elem elé az új kiadást:

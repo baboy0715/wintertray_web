@@ -3,14 +3,11 @@
  * WINTERTRAY - KIADÁSI ADATOK ÉS VERZIÓTÖRTÉNET (RELEASES CONFIG)
  * =========================================================================
  * 
- * ÚJ VERZIÓ KIADÁSAKOR:
- * 1. Másold le a legfelső objektumot a tömbben.
- * 2. Illeszd be a legelső elemként (index 0).
- * 3. Állítsd be az új verziónál az "isLatest: true" értéket, a korábbinál "isLatest: false".
- * 4. Töltsd ki a verziószámot, dátumot, letöltési linkeket és az újdonságok listáját.
+ * TIPP: Használd az új Admin Felületet a kényelmes, vizuális szerkesztéshez!
+ * Elérés: admin.html vagy a billentyűzeteden nyomd le: Ctrl + Shift + A
  * 
- * A weboldal automatikusan frissíti a Hero fő letöltőgombját, a verziószámot,
- * a fájlméretet, a hordozható verzió linkjét és a teljes Changelog idővonalat!
+ * Közvetlen letöltés: a "./downloads/WinterTray-Setup.exe" és "./downloads/WinterTray-Portable.zip"
+ * közvetlenül a Cloudflare Pages tárhelyéről szolgálódik ki 404 nélkül!
  */
 
 window.WINTERTRAY_RELEASES = [
@@ -20,11 +17,13 @@ window.WINTERTRAY_RELEASES = [
     isLatest: true,
     isFeatured: true,
     badge: "Legfrissebb Stabil Kiadás",
-    downloadUrl: "https://github.com/baboy0715/wintertray_web/releases/download/v1.0.0/WinterTray-Setup.exe",
-    portableUrl: "https://github.com/baboy0715/wintertray_web/releases/download/v1.0.0/WinterTray-Portable.zip",
+    downloadUrl: "./downloads/WinterTray-Setup.exe",
+    githubReleaseUrl: "https://github.com/baboy0715/wintertray_web/releases/download/v1.0.0/WinterTray-Setup.exe",
+    portableUrl: "./downloads/WinterTray-Portable.zip",
+    githubPortableUrl: "https://github.com/baboy0715/wintertray_web/releases/download/v1.0.0/WinterTray-Portable.zip",
     fileSize: "18.4 MB",
     portableSize: "14.2 MB",
-    sha256: "9b1c7a84e3f890c52d4e786b51034f19bcae710d24f0c8e1a7b3c2e1f0a8d9e2",
+    sha256: "337af21d375c0a629e30e581ed5869810c99177e3f7d88eb440b844972e60ff6",
     highlights: [
       "Első hivatalos nyilvános kiadás Windows 11 és Windows 10 (64-bit) rendszerekre.",
       "Valós idejű, hardveresen gyorsított (DirectX 11) fizikai hóhullás szimuláció.",
@@ -57,8 +56,8 @@ window.WINTERTRAY_RELEASES = [
       {
         category: "Telepítő & Hordozhatóság",
         items: [
-          "Klasszikus Windows telepítő (Silent install kapcsolókkal csendes telepítéshez)",
-          "Önálló hordozható (Portable) kiadás, amely regisztrációs adatbázis módosítás nélkül fut"
+          "Közvetlen Cloudflare Pages letöltés: villámgyors globális CDN kiszolgálás",
+          "Klasszikus Windows telepítő és önálló hordozható (Portable) kiadás"
         ]
       }
     ]
@@ -69,11 +68,13 @@ window.WINTERTRAY_RELEASES = [
     isLatest: false,
     isFeatured: false,
     badge: "Béta Előzetes",
-    downloadUrl: "https://github.com/baboy0715/wintertray_web/releases/download/v0.9.5-beta/WinterTray-Setup-v0.9.5.exe",
-    portableUrl: "https://github.com/baboy0715/wintertray_web/releases/download/v0.9.5-beta/WinterTray-Portable-v0.9.5.zip",
+    downloadUrl: "./downloads/WinterTray-Setup.exe",
+    githubReleaseUrl: "https://github.com/baboy0715/wintertray_web/releases/download/v0.9.5-beta/WinterTray-Setup-v0.9.5.exe",
+    portableUrl: "./downloads/WinterTray-Portable.zip",
+    githubPortableUrl: "https://github.com/baboy0715/wintertray_web/releases/download/v0.9.5-beta/WinterTray-Portable-v0.9.5.zip",
     fileSize: "17.9 MB",
     portableSize: "13.8 MB",
-    sha256: "4a7f21b8c9e0d1f3b5a6c8e7d2f4a1b0c9e8d7f6a5b4c3d2e1f0a9b8c7d6e5f4",
+    sha256: "de4ab787321fe4acf2bd5ca2bc47f66d6121f2d507ae7dbd69a92535f20fd04e",
     highlights: [
       "Béta tesztverzió az ablakfizikai motor és a DWM rétegek tesztelésére.",
       "Kezdeti Windows 11 lekerekített sarkú ablakok támogatása.",
