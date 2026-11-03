@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WinterTray — Varázsolj valódi téli hangulatot a Windows asztalodra | Windows 11</title>
+  <meta name="description" content="Prémium Windows 11 desktop alkalmazás. Fizikai alapú hóhullás, ablakokra ráülő és lesöpörhető hótakaró, jégcsapok és automatikus téli hangulat. DirectX 11 hardveres gyorsítással, 100% ingyenesen.">
+  <meta name="keywords" content="WinterTray, Windows 11 snow app, hóhullás asztalon, téli háttér, DirectX hó, desktop snow, Windows 10 hó, ablakfizika">
+  <meta name="author" content="WinterTray Team">
+
+  <!-- Open Graph / Közösségi média -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="WinterTray — Varázsolj valódi téli hangulatot a Windows asztalodra">
+  <meta property="og:description" content="Fizikai alapú hóhullás, ablakokra ráülő és lesöpörhető hótakaró, jégcsapok és zéró terhelés játékok alatt.">
+  <meta property="og:url" content="https://github.com/baboy0715/wintertray_web">
+  <meta property="og:image" content="https://raw.githubusercontent.com/baboy0715/wintertray_web/main/preview.png">
+  <meta name="theme-color" content="#060913">
+
+  <!-- Favicon (SVG Hópehely) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='2' x2='12' y2='22'%3E%3C/line%3E%3Cline x1='2' y1='12' x2='22' y2='12'%3E%3C/line%3E%3Cline x1='4.93' y1='4.93' x2='19.07' y2='19.07'%3E%3C/line%3E%3Cline x1='19.07' y1='4.93' x2='4.93' y2='19.07'%3E%3C/line%3E%3C/svg%3E">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Interaktív 60 FPS HTML5 Canvas háttér-hóhullás -->
+  <canvas id="snow-canvas" aria-hidden="true"></canvas>
+
+  <div class="content-wrapper">
+
+    <!-- =========================================================================
+         FEJLÉC / NAVIGÁCIÓ
+         ========================================================================= -->
+    <header class="site-header">
+      <div class="container nav-container">
+        <a href="#" class="brand-logo" aria-label="WinterTray Főoldal">
+          <div class="logo-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+              <line x1="19.07" y1="4.93" x2="4.93" y2="19.07"></line>
+              <polyline points="9 4 12 7 15 4"></polyline>
+              <polyline points="9 20 12 17 15 20"></polyline>
+              <polyline points="4 9 7 12 4 15"></polyline>
+              <polyline points="20 9 17 12 20 15"></polyline>
+            </svg>
+          </div>
+          <span class="brand-name">WinterTray</span>
+          <span class="brand-badge">Win 11</span>
+        </a>
+
+        <nav>
+          <ul class="nav-menu" id="nav-menu">
+            <li><a href="#features" class="nav-link">Funkciók</a></li>
+            <li><a href="#changelog" class="nav-link">Kiadások (Changelog)</a></li>
+            <li><a href="#requirements" class="nav-link">Rendszerkövetelmények</a></li>
+            <li><a href="#faq" class="nav-link">GYIK</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <a href="https://github.com/baboy0715/wintertray_web" target="_blank" rel="noopener" class="btn-github" title="Forráskód a GitHubon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            <span>GitHub</span>
+          </a>
+          <a href="#changelog" id="nav-download-btn" class="btn-nav-download">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Letöltés</span>
+          </a>
+          <button class="mobile-toggle" id="mobile-menu-toggle" aria-label="Menü megnyitása">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- =========================================================================
+         HERO BLOKK
+         ========================================================================= -->
+    <main>
+      <section class="hero-section">
+        <div class="container">
+          <div class="hero-badge-wrapper">
+            <div class="hero-pill">
+              <span class="pill-pulse"></span>
+              <span>Új kiadás elérhető • Windows 11 &amp; Windows 10</span>
+            </div>
+          </div>
+
+          <h1 class="hero-title">
+            Varázsolj valódi <span class="gradient-text">téli hangulatot</span> a Windows asztalodra
+          </h1>
+
+          <p class="hero-subtitle">
+            Fizikai alapú hóhullás, ablakokra ráülő és lesöpörhető hótakaró, jégcsapok és automatikus téli háttérkép Windows 11-re. Hardveresen gyorsítva, nulla késleltetéssel.
+          </p>
+
+          <!-- Fő letöltési gombok -->
+          <div class="hero-cta-group">
+            <a href="https://github.com/baboy0715/wintertray_web/releases/download/v1.0.0/WinterTray-Setup.exe" id="hero-download-btn" class="btn-primary-download">
+              <div class="download-icon-box">
+                <!-- Windows Logo -->
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.901-1.8"/>
+                </svg>
+              </div>
+              <div class="download-text-box">
+                <span class="download-label" id="hero-version-label">Letöltés (v1.0.0)</span>
+                <span class="download-meta" id="hero-size-label">18.4 MB • Windows 11 / 10 (64-bit)</span>
+              </div>
+            </a>
+
+            <a href="https://github.com/baboy0715/wintertray_web/releases/download/v1.0.0/WinterTray-Portable.zip" id="hero-portable-btn" class="btn-secondary" title="Nem igényel telepítést, hordozható ZIP archívum">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+              <span>Hordozható verzió <span id="hero-portable-size">(14.2 MB)</span></span>
+            </a>
+
+            <a href="https://github.com/baboy0715/wintertray_web" target="_blank" rel="noopener" class="btn-secondary">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+              <span>GitHub Forráskód</span>
+            </a>
+          </div>
+
+          <div class="hero-quick-meta">
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              100% Ingyenes &amp; Nyílt forráskódú
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              DirectX 11 hardveres gyorsítás
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Nincs telemetria, zéró reklám
+            </span>
+          </div>
+
+          <!-- =========================================================================
+               WINDOWS 11 ALKALMAZÁS MOCK-UP KERET
+               ========================================================================= -->
+          <div class="mockup-wrapper">
+            <!-- Valósághű hótakaró és jégcsap rétegek a mockupon -->
+            <div class="snow-cap" title="Valós időben az ablakok tetején megülő hóréteg"></div>
+            <div class="icicles-decor" title="Kattints a jégcsapokra!">
+              <div class="icicle"></div>
+              <div class="icicle"></div>
+              <div class="icicle"></div>
+              <div class="icicle"></div>
+              <div class="icicle"></div>
+            </div>
+
+            <div class="app-mockup">
+              <!-- Windows 11 Fejléc -->
+              <div class="mockup-titlebar">
+                <div class="titlebar-brand">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                    <line x1="19.07" y1="4.93" x2="4.93" y2="19.07"></line>
+                  </svg>
+                  <span>WinterTray v1.0.0 — Vezérlőpult</span>
+                </div>
+                <div class="titlebar-status">
+                  <span class="status-dot"></span>
+                  <span>Fizika aktív • 60 FPS</span>
+                </div>
+                <div class="caption-buttons">
+                  <div class="caption-btn minimize"></div>
+                  <div class="caption-btn maximize"></div>
+                  <div class="caption-btn close"></div>
+                </div>
+              </div>
+
+              <!-- Mockup Belső -->
+              <div class="mockup-body">
+                <aside class="mockup-sidebar">
+                  <div class="sidebar-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <span>Hóhullás &amp; Fizika</span>
+                  </div>
+                  <div class="sidebar-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                    <span>Ablakok &amp; DWM</span>
+                  </div>
+                  <div class="sidebar-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>Jégcsap effektek</span>
+                  </div>
+                  <div class="sidebar-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <span>Beállítások</span>
+                  </div>
+                </aside>
+
+                <div class="mockup-content">
+                  <div class="mockup-header-title">
+                    <div>
+                      <h4>Fizikai paraméterek és ablakintegráció</h4>
+                      <p>Kattints a kapcsolókra a valós idejű teszteléshez!</p>
+                    </div>
+                  </div>
+
+                  <!-- Windows 11 Fluent Toggles -->
+                  <div class="mockup-settings-grid">
+                    <div class="setting-card">
+                      <div class="setting-info">
+                        <span class="setting-name">Ablakra gyűlő hóréteg</span>
+                        <span class="setting-desc">Valós DWM keretfelismerés</span>
+                      </div>
+                      <div class="w11-toggle checked" data-feature="snow-cap" title="Kattints a kapcsolásra">
+                        <div class="w11-toggle-thumb"></div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card">
+                      <div class="setting-info">
+                        <span class="setting-name">Interaktív jégcsapok</span>
+                        <span class="setting-desc">Kattintásra szétrobbanó jég</span>
+                      </div>
+                      <div class="w11-toggle checked" data-feature="icicles" title="Kattints a kapcsolásra">
+                        <div class="w11-toggle-thumb"></div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card">
+                      <div class="setting-info">
+                        <span class="setting-name">Egérrel söprés</span>
+                        <span class="setting-desc">Porhó kitérés a kurzor előtt</span>
+                      </div>
+                      <div class="w11-toggle checked" data-feature="mouse-brush" title="Kattints a kapcsolásra">
+                        <div class="w11-toggle-thumb"></div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card">
+                      <div class="setting-info">
+                        <span class="setting-name">Játékos Mód (Zero CPU)</span>
+                        <span class="setting-desc">Auto-szünet játékok alatt</span>
+                      </div>
+                      <div class="w11-toggle checked" data-feature="game-mode" title="Kattints a kapcsolásra">
+                        <div class="w11-toggle-thumb"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Interaktív Csúszkák -->
+                  <div class="mockup-settings-grid">
+                    <div class="slider-control-card">
+                      <div class="slider-top-row">
+                        <span>Hóhullás sűrűsége</span>
+                        <span class="slider-val-tag" id="mockup-speed-val">100%</span>
+                      </div>
+                      <input type="range" class="w11-slider" id="mockup-speed-slider" min="0.3" max="2.5" step="0.1" value="1.0">
+                    </div>
+
+                    <div class="slider-control-card">
+                      <div class="slider-top-row">
+                        <span>Szélirány &amp; Turbulencia</span>
+                        <span class="slider-val-tag" id="mockup-wind-val">+0.5 ÉK</span>
+                      </div>
+                      <input type="range" class="w11-slider" id="mockup-wind-slider" min="-3.0" max="3.0" step="0.2" value="0.5">
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           METRIKA / STATISZTIKA SÁV
+           ========================================================================= -->
+      <section class="stats-strip">
+        <div class="container">
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-number">60 FPS</span>
+              <span class="stat-desc">Folyékony DirectX 11 motor</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">&lt; 0.8%</span>
+              <span class="stat-desc">Minimális CPU/GPU igény</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">0 Ft</span>
+              <span class="stat-desc">100% Ingyenes &amp; Nyílt forrás</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">24 MB</span>
+              <span class="stat-desc">Ultrakönnyű memórialábnyom</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           FUNKCIÓK SZEKCIÓ (GLASSMORPHISM KÁRTYÁK)
+           ========================================================================= -->
+      <section id="features" class="section-padding">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-pill">Főbb képességek</div>
+            <h2 class="section-title">Miért különleges a WinterTray?</h2>
+            <p class="section-subtitle">
+              Nem csupán egy egyszerű háttéranimáció: mélyen integrálódik a Windows 11 ablakkezelőjébe a lehető legtermészetesebb téli hangulatért.
+            </p>
+          </div>
+
+          <div class="features-grid">
+            <!-- 1. Intelligens fizika -->
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <line x1="3.27" y1="6.96" x2="12" y2="12.01"></line>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </div>
+              <h3>Intelligens ablakfizika</h3>
+              <p>
+                A hópelyhek valós időben érzékelik a megnyitott programjaidat és finom hóréteget képeznek az ablakkeretek tetején. Ha arrébb húzod vagy átméretezed az ablakot, a hóréteg látványosan leomlik!
+              </p>
+              <div class="feature-tag-list">
+                <span class="feature-tag">DWM integráció</span>
+                <span class="feature-tag">Leomló porhó</span>
+              </div>
+            </div>
+
+            <!-- 2. Interaktivitás -->
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <h3>Valódi interaktivitás</h3>
+              <p>
+                Söpörd le az egérkurzoroddal a meggyűlt havat, vagy kattints a sarkokban képződő kristálytiszta jégcsapokra, hogy szétrobbanjanak és szilánkokra hulljanak a képernyődön.
+              </p>
+              <div class="feature-tag-list">
+                <span class="feature-tag">Egérsöprés</span>
+                <span class="feature-tag">Csöpögő jégcsapok</span>
+              </div>
+            </div>
+
+            <!-- 3. Nulla késleltetés -->
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              </div>
+              <h3>Nulla késleltetés &amp; DirectX 11</h3>
+              <p>
+                Modern hardveres gyorsítással működik. Játékok, renderelés vagy teljes képernyős videónézés közben a WinterTray automatikusan szünetel, így 0% CPU és GPU terhelést jelent.
+              </p>
+              <div class="feature-tag-list">
+                <span class="feature-tag">Game Mode</span>
+                <span class="feature-tag">&lt; 0.8% CPU</span>
+              </div>
+            </div>
+
+            <!-- 4. Windows 11 natív élmény -->
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <h3>Windows 11 natív élmény</h3>
+              <p>
+                Mica és Acrylic harmóniában tervezve. Képmetsző (Snipping Tool) felismerés: ha képernyőfotót készítesz a munkádhoz, a hóhullás láthatatlanul elbújik, hogy tiszta képet kapj.
+              </p>
+              <div class="feature-tag-list">
+                <span class="feature-tag">Snipping Tool barát</span>
+                <span class="feature-tag">Mica design</span>
+              </div>
+            </div>
+
+            <!-- 5. Többmonitoros támogatás -->
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="4" width="9" height="12" rx="1"></rect>
+                  <rect x="13" y="4" width="9" height="12" rx="1"></rect>
+                  <line x1="6.5" y1="16" x2="6.5" y2="20"></line>
+                  <line x1="17.5" y1="16" x2="17.5" y2="20"></line>
+                </svg>
+              </div>
+              <h3>Többmonitoros támogatás</h3>
+              <p>
+                Több kijelzőt használsz különböző felbontásokkal vagy DPI skálázással? A WinterTray intelligensen felismeri a virtuális asztalokat és folyamatos hóhullást biztosít mindegyiken.
+              </p>
+              <div class="feature-tag-list">
+                <span class="feature-tag">Multi-Monitor</span>
+                <span class="feature-tag">4K / Ultraszéles</span>
+              </div>
+            </div>
+
+            <!-- 6. Rendszertálca integráció -->
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+              </div>
+              <h3>Rendszertálca (System Tray)</h3>
+              <p>
+                Kényelmes ikon a Windows óra mellett. Egy kattintással előhívható gyorskapcsolók, hóvihar mód bekapcsolása, szélirány állítás és kíméletes automatikus indítás a rendszerrel.
+              </p>
+              <div class="feature-tag-list">
+                <span class="feature-tag">Gyorskapcsolók</span>
+                <span class="feature-tag">Hóvihar mód</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           INTERAKTÍV HÓ-JÁTSZÓTÉR (SNOW PLAYGROUND)
+           ========================================================================= -->
+      <section class="playground-section">
+        <div class="container">
+          <div class="playground-card">
+            <div class="playground-info">
+              <h3>Próbáld ki a hóhullás motort itt az oldalon!</h3>
+              <p>
+                A weboldalon ugyanaz a 60 FPS fizikai logika fut a háttérben. Állítsd be a szélirányt, sűrítsd be a havazást vagy indíts egy hózáport!
+              </p>
+            </div>
+
+            <div class="playground-controls">
+              <div class="pg-control-group">
+                <span class="pg-control-label">
+                  <span>Hósűrűség</span>
+                  <span id="pg-density-val" style="color: var(--ice-light);">100%</span>
+                </span>
+                <input type="range" class="w11-slider" id="pg-density" min="0.3" max="2.5" step="0.1" value="1.0">
+              </div>
+
+              <div class="pg-control-group">
+                <span class="pg-control-label">
+                  <span>Szélirány</span>
+                  <span id="pg-wind-val" style="color: var(--ice-light);">Jobbra (ÉK)</span>
+                </span>
+                <input type="range" class="w11-slider" id="pg-wind" min="-3.0" max="3.0" step="0.2" value="0.5">
+              </div>
+
+              <button id="btn-trigger-flurry" class="btn-flurry">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                <span>Hózápor robbantás!</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           VERZIÓTÖRTÉNET & KIADÁSOK (CHANGELOG) SZEKCIÓ
+           ========================================================================= -->
+      <section id="changelog" class="section-padding changelog-section">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-pill">Verziótörténet</div>
+            <h2 class="section-title">Kiadások és Frissítési Napló</h2>
+            <p class="section-subtitle">
+              Minden verzió részletes fejlesztési jegyzékkel és közvetlen telepítő-, illetve hordozható letöltési linkekkel rendelkezik.
+            </p>
+          </div>
+
+          <!-- Dinamikusan generált kiadás lista a releases.js alapján -->
+          <div class="timeline-container" id="changelog-timeline">
+            <!-- Tartalék statikus markup, amíg a JavaScript inicializál -->
+            <div class="timeline-item">
+              <div class="timeline-node"><div class="timeline-node-inner"></div></div>
+              <div class="timeline-card">
+                <div class="release-header">
+                  <div class="release-title-group">
+                    <span class="release-version">v1.0.0</span>
+                    <span class="release-badge">Legfrissebb Kiadás</span>
+                    <span class="release-date">2026. november 1.</span>
+                  </div>
+                  <div class="release-download-group">
+                    <a href="https://github.com/baboy0715/wintertray_web/releases/download/v1.0.0/WinterTray-Setup.exe" class="btn-release-dl">
+                      Telepítő (18.4 MB)
+                    </a>
+                  </div>
+                </div>
+                <ul class="release-highlights">
+                  <li>Első hivatalos nyilvános kiadás Windows 11 és Windows 10 (64-bit) rendszerekre.</li>
+                  <li>Valós idejű, hardveresen gyorsított (DirectX 11) fizikai hóhullás.</li>
+                  <li>Ablakok tetején megülő hóréteg és leomló fizika.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           RENDSZERKÖVETELMÉNYEK
+           ========================================================================= -->
+      <section id="requirements" class="section-padding" style="background: rgba(6, 9, 19, 0.5);">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-pill">Kompatibilitás</div>
+            <h2 class="section-title">Rendszerkövetelmények</h2>
+            <p class="section-subtitle">
+              A WinterTray modern C++ és natív Windows API-kra épül, így elhanyagolható erőforrásigénnyel fut szinte minden modern gépen.
+            </p>
+          </div>
+
+          <div class="req-grid">
+            <div class="req-card">
+              <div class="req-card-header">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.901-1.8"/>
+                </svg>
+                <h3>Minimum követelmények</h3>
+              </div>
+              <div class="req-list">
+                <div class="req-row">
+                  <span class="req-label">Operációs rendszer</span>
+                  <span class="req-val">Windows 10 (1903+) / 11 (64-bit)</span>
+                </div>
+                <div class="req-row">
+                  <span class="req-label">Videokártya (GPU)</span>
+                  <span class="req-val">DirectX 11 kompatibilis grafika</span>
+                </div>
+                <div class="req-row">
+                  <span class="req-label">Processzor (CPU)</span>
+                  <span class="req-val">Intel / AMD kétmagos processzor</span>
+                </div>
+                <div class="req-row">
+                  <span class="req-label">Memória (RAM)</span>
+                  <span class="req-val">100 MB szabad memória (~24 MB aktív)</span>
+                </div>
+                <div class="req-row">
+                  <span class="req-label">Szabad tárhely</span>
+                  <span class="req-val">45 MB</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="req-card">
+              <div class="req-card-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <h3>Ajánlott konfiguráció</h3>
+              </div>
+              <div class="req-list">
+                <div class="req-row">
+                  <span class="req-label">Operációs rendszer</span>
+                  <span class="req-val">Windows 11 (22H2 vagy újabb)</span>
+                </div>
+                <div class="req-row">
+                  <span class="req-label">Videokártya (GPU)</span>
+                  <span class="req-val">Dedikált NVIDIA / AMD / Intel Arc GPU</span>
+                </div>
+                <div class="req-row">
+                  <span class="req-label">Processzor (CPU)</span>
+                  <span class="req-val">Négymagos vagy modernebb CPU</span>
+                </div>
+                <div class="req-row">
+                  <span class="req-label">Kijelző felbontás</span>
+                  <span class="req-val">Full HD, 2K, 4K vagy Ultraszéles</span>
+                </div>
+                <div class="req-row">
+                  <span class="req-label">Monitorok száma</span>
+                  <span class="req-val">Többmonitoros konfigurációk támogatva</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           GYAKRAN ISMÉTELT KÉRDÉSEK (FAQ)
+           ========================================================================= -->
+      <section id="faq" class="section-padding">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-pill">Kérdések &amp; Válaszok</div>
+            <h2 class="section-title">Gyakran Ismételt Kérdések</h2>
+            <p class="section-subtitle">
+              Minden lényeges információ a WinterTray működéséről és biztonságáról.
+            </p>
+          </div>
+
+          <div class="faq-list">
+            <div class="faq-item">
+              <button class="faq-question">
+                <span>Lassítja a számítógépemet játék vagy munka közben?</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  Nem. A WinterTray beépített <strong>Game Mode</strong> funkcióval rendelkezik: amint bármilyen teljes képernyős játékot vagy alkalmazást (pl. Blender, videovágó) indítasz el, a hóhullás azonnal teljesen felfüggeszti a renderelést (0% CPU és 0% GPU terhelés).
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question">
+                <span>Hogyan működik az ablakokra ráülő hótakaró?</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  A program közvetlenül a Windows Desktop Window Manager (DWM) rétegével kommunikál, így pontosan ismeri a látható ablakok pozícióját és lekerekített kereteit. A pelyhek felütköznek a kereteken, és ha arrébb mozgatod az ablakot, a fizikai motor valósághűen leomlasztja a meggyűlt havat.
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question">
+                <span>Használható telepítés nélkül is (Portable verzió)?</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  Igen! Minden verzióból elérhető egy önálló <code>WinterTray-Portable.zip</code> kiadás. Ezt csak ki kell csomagolnod akár egy pendrive-ra vagy tetszőleges mappába, és azonnal futtathatod rendszergazdai jogosultság nélkül is.
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question">
+                <span>Tényleg 100%-ban ingyenes és biztonságos?</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  Igen. A WinterTray teljesen nyílt forráskódú (MIT Licenc alatt), nincs benne semmilyen reklám, adatgyűjtés vagy telemetria. A teljes forráskód bárki számára szabadon átvizsgálható a hivatalos GitHub tárolóban.
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question">
+                <span>Hogyan frissíthetem az alkalmazást az új verziókra?</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  A tálcamenüben található „Frissítések keresése” opcióval vagy közvetlenül erről a weboldalról töltheted le az új telepítőt. Az új telepítő automatikusan felülírja a korábbi verziót, megőrizve a személyes beállításaidat.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           ZÁRÓ CALL-TO-ACTION (CTA) BANNER
+           ========================================================================= -->
+      <section class="section-padding">
+        <div class="container">
+          <div class="cta-banner-card">
+            <h2 class="cta-title">Készen állsz a varázslatos téli hangulatra?</h2>
+            <p class="cta-desc">
+              Töltsd le a WinterTray legfrissebb kiadását most, és élvezd a fizikai alapú hóhullást és kristálytiszta jégcsapokat a Windows asztalodon!
+            </p>
+            <div class="hero-cta-group">
+              <a href="https://github.com/baboy0715/wintertray_web/releases/download/v1.0.0/WinterTray-Setup.exe" id="banner-download-btn" class="btn-primary-download">
+                <div class="download-icon-box">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.901-1.8"/>
+                  </svg>
+                </div>
+                <div class="download-text-box">
+                  <span class="download-label" id="banner-version-label">WinterTray v1.0.0 letöltése most</span>
+                  <span class="download-meta">Ingyenes telepítő • Windows 11 &amp; 10 (64-bit)</span>
+                </div>
+              </a>
+              <a href="https://github.com/baboy0715/wintertray_web" target="_blank" rel="noopener" class="btn-secondary">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Csillagozd GitHubon ⭐</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- =========================================================================
+         LÁBLÉC (FOOTER)
+         ========================================================================= -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-brand-col">
+            <div class="brand-logo">
+              <div class="logo-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <line x1="12" y1="2" x2="12" y2="22"></line>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                  <line x1="19.07" y1="4.93" x2="4.93" y2="19.07"></line>
+                </svg>
+              </div>
+              <span class="brand-name">WinterTray</span>
+            </div>
+            <p class="footer-desc">
+              Prémium, modern és letisztult Windows 11 asztali alkalmazás fizikai hóhullással, ablakokra tapadó hóréteggel és zéró késleltetésű DirectX gyorsítással.
+            </p>
+          </div>
+
+          <div class="footer-links-group">
+            <div class="footer-col">
+              <h5>Navigáció</h5>
+              <ul>
+                <li><a href="#features">Funkciók</a></li>
+                <li><a href="#changelog">Kiadások (Changelog)</a></li>
+                <li><a href="#requirements">Rendszerkövetelmények</a></li>
+                <li><a href="#faq">Gyakori kérdések</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-col">
+              <h5>Letöltések</h5>
+              <ul>
+                <li><a href="#changelog">Legújabb telepítő (.exe)</a></li>
+                <li><a href="#changelog">Hordozható verzió (.zip)</a></li>
+                <li><a href="https://github.com/baboy0715/wintertray_web/releases" target="_blank" rel="noopener">Összes GitHub kiadás</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-col">
+              <h5>Közösség &amp; Licenc</h5>
+              <ul>
+                <li><a href="https://github.com/baboy0715/wintertray_web" target="_blank" rel="noopener">GitHub Repository</a></li>
+                <li><a href="https://github.com/baboy0715/wintertray_web/issues" target="_blank" rel="noopener">Hibabejelentés (Issues)</a></li>
+                <li><a href="https://github.com/baboy0715/wintertray_web/blob/main/LICENSE" target="_blank" rel="noopener">MIT Licenc</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2026 WinterTray. Készült a legszebb téli napokra. Nyílt forráskódú projekt.</p>
+          <p>Cloudflare Pages &amp; GitHub segítségével publikálva.</p>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Szkriptek -->
+  <script src="releases.js"></script>
+  <script src="snow.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
